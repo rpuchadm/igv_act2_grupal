@@ -1,5 +1,6 @@
 # Importación de módulos
 
+import random
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -21,6 +22,14 @@ def escenario():
     cuboMonocolor(colorPurple)
     glPopMatrix()
 
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glTranslatef(-0.5, -1, 2)
+    # Color marrón en formato RGB
+    color_marron = [0.65, 0.32, 0.17]
+    apilarCubosColorRand(color_marron)
+    glPopMatrix()
+
 
 def piso():
 
@@ -34,6 +43,35 @@ def piso():
     glVertex3f(half_edge, y, half_edge)
     glVertex3f(half_edge, y, -half_edge)
     glEnd()
+
+def apilarCubosColorRand(color_base = [0.65, 0.32, 0.17]):
+
+    variabilidad = 0.1  # ±10% de variabilidad en cada componente RGB
+    
+    # Iterar para apilar 10 cubos
+    for i in range(10):
+        # Generar un color aleatorio dentro del rango ±variabilidad% del color base
+        color_variado = [
+            max(0.0, min(1.0, color_base[0] * (1 + random.uniform(-variabilidad, variabilidad)))),  # R
+            max(0.0, min(1.0, color_base[1] * (1 + random.uniform(-variabilidad, variabilidad)))),  # G
+            max(0.0, min(1.0, color_base[2] * (1 + random.uniform(-variabilidad, variabilidad))))   # B
+        ]
+        
+        glPushMatrix()  # Guardar el estado actual de la matriz
+        glTranslatef(0.0, i * 1.0, 0.0)  # Desplazar cada cubo hacia arriba (en Y) con un espacio de 1.0 entre ellos
+        cuboMonocolor(color_variado)  # Dibujar el cubo con el color variado
+        glPopMatrix()  # Restaurar el estado de la matriz    
+
+def apilarCubos():
+    # Color marrón en formato RGB
+    color_marron = [0.65, 0.32, 0.17]
+    
+    # Iterar para apilar 10 cubos
+    for i in range(10):
+        glPushMatrix()  # Guardar el estado actual de la matriz
+        glTranslatef(0.0, i * 1.0, 0.0)  # Desplazar cada cubo hacia arriba (en Y) con un espacio de 1.0 entre ellos
+        cuboMonocolor(color_marron)  # Dibujar el cubo
+        glPopMatrix()  # Restaurar el estado de la matriz
 
 
 def cuboMonocolor( color):
