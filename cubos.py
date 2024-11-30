@@ -9,26 +9,61 @@ def escenario():
     
     piso()
     
-    glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
-    glTranslatef(1.5, 2, -1)
-    cuboMulticolor()
-    glPopMatrix()
+    #glMatrixMode(GL_MODELVIEW)
+    #glPushMatrix()
+    #glTranslatef(1.5, 2, -1)
+    #cuboMulticolor()
+    #glPopMatrix()
+
+    #glMatrixMode(GL_MODELVIEW)
+    #glPushMatrix()
+    #glTranslatef(-1.5, -2, 1)
+    #colorPurple = [0.5, 0, 0.5]
+    #cuboMonocolor(colorPurple)
+    #glPopMatrix()
 
     glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
-    glTranslatef(-1.5, -2, 1)
-    colorPurple = [0.5, 0, 0.5]
-    cuboMonocolor(colorPurple)
-    glPopMatrix()
+    glPushMatrix()    
+    glScalef(0.1, 0.1, 0.1) ## hace 10 veces más pequeño en ejes x, y, z
+    dibujarMesa()
+    glPopMatrix()    
+
+def dibujarMesa():
 
     glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
-    glTranslatef(-0.5, -1, 2)
-    # Color marrón en formato RGB
+    
+    # Color para las patas de la mesa
     color_marron = [0.65, 0.32, 0.17]
-    apilarCubosColorRand(color_marron)
+
+    altura = 15  # Altura de la mesa
+
+    # Dibujar las patas en y = 0, como se dibujan centradas en el origen, se desplazan en y/2 para que queden en el piso
+    glPushMatrix()
+    glTranslatef(0, altura / 2, 0)
+
+    # Coordenadas de las 4 patas (en las esquinas)
+    posiciones_patas = [
+        [-8, -1.0, 5],  # Esquina inferior izquierda
+        [8, -1.0, 5],   # Esquina inferior derecha
+        [-8, -1.0, -5], # Esquina superior izquierda
+        [8, -1.0, -5]   # Esquina superior derecha
+    ]
+
+    # Dibujar cada pata
+    for posicion in posiciones_patas:
+        glPushMatrix()
+        glTranslatef(posicion[0], posicion[1], posicion[2])  # Posicionar la pata
+        apilarCubosColorRand(color_marron, 0.1, 1, 15, 1)  # Dibujar una columna de cubos
+        glPopMatrix()
+
     glPopMatrix()
+
+    # Dibujar la tabla de la mesa
+    glPushMatrix()
+    glTranslatef(0, altura-0.5, 0)  # Elevar la tabla para que quede encima de las patas
+    apilarCubosColorRand(color_marron, 0.1, 25, 1, 15)  # Dibujar la tabla con un plano de cubos
+    glPopMatrix()
+
 
 
 def piso():
@@ -44,23 +79,42 @@ def piso():
     glVertex3f(half_edge, y, -half_edge)
     glEnd()
 
-def apilarCubosColorRand(color_base = [0.65, 0.32, 0.17]):
+def apilarCubosColorRand(color_base=[0.65, 0.32, 0.17], variabilidad=0.1, x=0, y=10, z=0):
+    """
+    Dibuja una estructura de cubos centrada en el eje de coordenadas.
+    :param color_base: Color base para los cubos en formato RGB.
+    :param variabilidad: Variabilidad en el color base (como porcentaje).
+    :param x: Número de cubos en el eje X (columnas).
+    :param y: Número de cubos en el eje Y (filas).
+    :param z: Número de cubos en el eje Z (profundidad).
+    """
+    # Calcular el desplazamiento inicial para centrar la estructura
+    offset_x = -(x - 1) * 0.5 if x > 0 else 0  # Centrar en X
+    offset_y = -(y - 1) * 0.5 if y > 0 else 0  # Centrar en Y
+    offset_z = -(z - 1) * 0.5 if z > 0 else 0  # Centrar en Z
 
-    variabilidad = 0.1  # ±10% de variabilidad en cada componente RGB
-    
-    # Iterar para apilar 10 cubos
-    for i in range(10):
-        # Generar un color aleatorio dentro del rango ±variabilidad% del color base
-        color_variado = [
-            max(0.0, min(1.0, color_base[0] * (1 + random.uniform(-variabilidad, variabilidad)))),  # R
-            max(0.0, min(1.0, color_base[1] * (1 + random.uniform(-variabilidad, variabilidad)))),  # G
-            max(0.0, min(1.0, color_base[2] * (1 + random.uniform(-variabilidad, variabilidad))))   # B
-        ]
-        
-        glPushMatrix()  # Guardar el estado actual de la matriz
-        glTranslatef(0.0, i * 1.0, 0.0)  # Desplazar cada cubo hacia arriba (en Y) con un espacio de 1.0 entre ellos
-        cuboMonocolor(color_variado)  # Dibujar el cubo con el color variado
-        glPopMatrix()  # Restaurar el estado de la matriz    
+    for i in range(y):
+        for j in range(x if x > 0 else 1):  # Si x > 0 genera filas en el plano
+            for k in range(z if z > 0 else 1):  # Si z > 0 genera profundidad
+                # Si z=10, generamos un cubo hueco dejando vacío el interior
+                if z == 10 and x == 10 and y == 10:
+                    if not (i == 0 or i == y - 1 or j == 0 or j == x - 1 or k == 0 or k == z - 1):
+                        continue  # Ignorar los cubos internos
+
+                # Generar color aleatorio dentro del rango ±variabilidad% del color base
+                color_variado = [
+                    max(0.0, min(1.0, color_base[0] * (1 + random.uniform(-variabilidad, variabilidad)))),  # R
+                    max(0.0, min(1.0, color_base[1] * (1 + random.uniform(-variabilidad, variabilidad)))),  # G
+                    max(0.0, min(1.0, color_base[2] * (1 + random.uniform(-variabilidad, variabilidad))))   # B
+                ]
+
+                glPushMatrix()  # Guardar el estado actual de la matriz
+                # Desplazar los cubos considerando el offset para centrarlos
+                glTranslatef(offset_x + j * 1.0, offset_y + i * 1.0, offset_z + k * 1.0)
+                cuboMonocolor(color_variado)  # Dibujar el cubo con el color variado
+                glPopMatrix()  # Restaurar el estado de la matriz
+
+
 
 def apilarCubos():
     # Color marrón en formato RGB
