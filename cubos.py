@@ -25,8 +25,47 @@ def escenario():
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()    
     glScalef(0.1, 0.1, 0.1) ## hace 10 veces más pequeño en ejes x, y, z
-    dibujarComposicionMesaSillas()
-    glPopMatrix()    
+    #dibujarComposicionMesaSillas()
+    dibujarComposicionMesaGrandeConSillas()
+    glPopMatrix()
+
+
+def dibujarComposicionMesaGrandeConSillas():
+    glMatrixMode(GL_MODELVIEW)
+
+    # Dibujar la mesa grande en el centro
+    glPushMatrix()
+    dibujarMesaGrande()  # La mesa se dibuja centrada en el origen
+    glPopMatrix()
+
+    # Dimensiones y posición para las sillas
+    distancia_lado_ancho = 25  # Distancia desde el centro de la mesa hasta las sillas en los lados anchos
+    distancia_lado_estrecho = 12  # Distancia desde el centro hasta las sillas en los lados estrechos
+    separacion_sillas = 15  # Separación entre las dos sillas en los lados anchos
+
+    # Posiciones de las sillas (incluyendo las rotaciones)
+    posiciones_sillas = [
+        # Sillas en los lados anchos (dos por lado)
+        [distancia_lado_ancho/2, 0, distancia_lado_estrecho, 180],
+        [distancia_lado_ancho/2, 0, -distancia_lado_estrecho, 0],
+        [-distancia_lado_ancho/2, 0, distancia_lado_estrecho, 180],
+        [-distancia_lado_ancho/2, 0, -distancia_lado_estrecho, 0],        
+
+        # Sillas en los lados estrechos (una por lado)
+        [distancia_lado_ancho, 0, 0, -90],  # Atrás
+        [-distancia_lado_ancho, 0, 0, 90]   # Adelante
+
+    ]
+
+    # Dibujar cada silla
+    for posicion in posiciones_sillas:
+        glPushMatrix()
+        glTranslatef(posicion[0], posicion[1], posicion[2])  # Colocar la silla alrededor de la mesa
+        glRotatef(posicion[3], 0, 1, 0)  # Rotación en el eje Y de la silla
+        dibujarSilla()  # Dibujar la silla
+        glPopMatrix()
+
+
 
 def dibujarComposicionMesaSillas():
     glMatrixMode(GL_MODELVIEW)
@@ -52,6 +91,43 @@ def dibujarComposicionMesaSillas():
         glRotatef(posicion[3], 0, 1, 0)
         dibujarSilla()  # Dibujar la silla
         glPopMatrix()
+
+def dibujarMesaGrande():
+    glMatrixMode(GL_MODELVIEW)
+
+    # Color para las patas de la mesa
+    color_marron = [0.65, 0.32, 0.17]
+
+    altura = 15  # Altura de la mesa
+    largo_mesa = 50  # Largo de la mesa
+    ancho_mesa = 20  # Ancho de la mesa
+
+    # Dibujar las patas en y = 0, desplazadas en altura/2 para que queden en el piso
+    glPushMatrix()
+    glTranslatef(0, altura / 2, 0)
+
+    # Coordenadas de las 4 patas (en las esquinas)
+    posiciones_patas = [
+        [-largo_mesa / 2 + 2, 0, ancho_mesa / 2 - 2],  # Esquina inferior izquierda
+        [largo_mesa / 2 - 2, 0, ancho_mesa / 2 - 2],   # Esquina inferior derecha
+        [-largo_mesa / 2 + 2, 0, -ancho_mesa / 2 + 2], # Esquina superior izquierda
+        [largo_mesa / 2 - 2, 0, -ancho_mesa / 2 + 2]   # Esquina superior derecha
+    ]
+
+    # Dibujar cada pata
+    for posicion in posiciones_patas:
+        glPushMatrix()
+        glTranslatef(posicion[0], posicion[1], posicion[2])  # Posicionar la pata
+        apilarCubosColorRand(color_marron, 0.1, 1, 15, 1)  # Dibujar una columna de cubos
+        glPopMatrix()
+
+    glPopMatrix()  # Fin del desplazamiento de las patas en altura / 2
+
+    # Dibujar la tabla de la mesa
+    glPushMatrix()
+    glTranslatef(0, altura - 0.5, 0)  # Elevar la tabla para que quede encima de las patas
+    apilarCubosColorRand(color_marron, 0.1, largo_mesa, 1, ancho_mesa)  # Dibujar la tabla con un plano de cubos
+    glPopMatrix()
 
 
 def dibujarMesa():
@@ -326,4 +402,3 @@ def cuboMulticolor():
     glVertex3fv(v5)
     glVertex3fv(v8)
     glEnd()
-
