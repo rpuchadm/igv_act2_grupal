@@ -25,8 +25,34 @@ def escenario():
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()    
     glScalef(0.1, 0.1, 0.1) ## hace 10 veces más pequeño en ejes x, y, z
-    dibujarMesa()
+    dibujarComposicionMesaSillas()
     glPopMatrix()    
+
+def dibujarComposicionMesaSillas():
+    glMatrixMode(GL_MODELVIEW)
+    
+    # Dibujar la mesa en el centro
+    glPushMatrix()
+    dibujarMesa()  # Asumimos que la mesa está centrada en el origen
+    glPopMatrix()
+
+    # Dimensiones y posición para las sillas
+    distancia_sillas = 15  # Distancia entre el centro de la mesa y las sillas
+    posiciones_sillas = [
+        [0, 0, distancia_sillas, 180],   # Frente
+        [0, 0, -distancia_sillas, 0],  # Detrás
+        [-distancia_sillas, 0, 0, 90],  # Izquierda
+        [distancia_sillas, 0, 0, -90]    # Derecha
+    ]
+
+    # Dibujar cada silla
+    for posicion in posiciones_sillas:
+        glPushMatrix()
+        glTranslatef(posicion[0], posicion[1], posicion[2])  # Colocar la silla alrededor de la mesa
+        glRotatef(posicion[3], 0, 1, 0)
+        dibujarSilla()  # Dibujar la silla
+        glPopMatrix()
+
 
 def dibujarMesa():
 
@@ -64,6 +90,51 @@ def dibujarMesa():
     apilarCubosColorRand(color_marron, 0.1, 25, 1, 15)  # Dibujar la tabla con un plano de cubos
     glPopMatrix()
 
+def dibujarSilla():
+    glMatrixMode(GL_MODELVIEW)
+    
+    # Color para las patas y la estructura de la silla
+    color_marron = [0.65, 0.32, 0.17]
+    color_gris_oscuro = [0.2, 0.2, 0.2]
+    color_gris = [0.4, 0.4, 0.4]
+
+    altura_asiento = 10  # Altura del asiento de la silla
+    altura_respaldo = 15  # Altura adicional para el respaldo
+    ancho_silla = 10  # Ancho de la silla
+    profundidad_silla = 10  # Profundidad de la silla
+
+    # Dibujar las patas (en y = 0), desplazadas en altura_asiento/2 para que queden en el piso
+    glPushMatrix()
+    glTranslatef(0, altura_asiento / 2, 0)
+
+    # Coordenadas de las 4 patas (en las esquinas)
+    posiciones_patas = [
+        [-ancho_silla / 2 + 1, 0, profundidad_silla / 2 - 1],  # Esquina inferior izquierda
+        [ancho_silla / 2 - 1, 0, profundidad_silla / 2 - 1],   # Esquina inferior derecha
+        [-ancho_silla / 2 + 1, 0, -profundidad_silla / 2 + 1], # Esquina superior izquierda
+        [ancho_silla / 2 - 1, 0, -profundidad_silla / 2 + 1]   # Esquina superior derecha
+    ]
+
+    # Dibujar cada pata
+    for posicion in posiciones_patas:
+        glPushMatrix()
+        glTranslatef(posicion[0], posicion[1], posicion[2])  # Posicionar la pata
+        apilarCubosColorRand(color_marron, 0.1, 1, altura_asiento, 1)  # Dibujar una columna de cubos
+        glPopMatrix()
+
+    glPopMatrix()  # Fin del desplazamiento de las patas en altura_asiento / 2
+
+    # Dibujar el asiento de la silla
+    glPushMatrix()
+    glTranslatef(0, altura_asiento - 0.5, 0)  # Elevar el asiento para que quede encima de las patas
+    apilarCubosColorRand(color_gris_oscuro, 0.1, ancho_silla, 1, profundidad_silla)  # Dibujar el asiento como un plano
+    glPopMatrix()
+
+    # Dibujar el respaldo de la silla
+    glPushMatrix()
+    glTranslatef(0, altura_asiento + altura_respaldo / 2 - 0.5, -profundidad_silla / 2 + 0.5)  # Posicionar el respaldo
+    apilarCubosColorRand(color_gris, 0.1, ancho_silla, altura_respaldo, 1)  # Dibujar el respaldo como un plano vertical
+    glPopMatrix()
 
 
 def piso():
