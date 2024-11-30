@@ -37,16 +37,16 @@ def dibujarMesa():
 
     altura = 15  # Altura de la mesa
 
-    # Dibujar las patas en y = 0, como se dibujan centradas en el origen, se desplazan en y/2 para que queden en el piso
+    # Dibujar las patas en y = 0, como se dibujan centradas en el origen, se desplazan en altura/2 para que queden en el piso
     glPushMatrix()
     glTranslatef(0, altura / 2, 0)
 
     # Coordenadas de las 4 patas (en las esquinas)
     posiciones_patas = [
-        [-8, -1.0, 5],  # Esquina inferior izquierda
-        [8, -1.0, 5],   # Esquina inferior derecha
-        [-8, -1.0, -5], # Esquina superior izquierda
-        [8, -1.0, -5]   # Esquina superior derecha
+        [-8, 0, 5],  # Esquina inferior izquierda
+        [8, 0, 5],   # Esquina inferior derecha
+        [-8, 0, -5], # Esquina superior izquierda
+        [8, 0, -5]   # Esquina superior derecha
     ]
 
     # Dibujar cada pata
@@ -56,7 +56,7 @@ def dibujarMesa():
         apilarCubosColorRand(color_marron, 0.1, 1, 15, 1)  # Dibujar una columna de cubos
         glPopMatrix()
 
-    glPopMatrix()
+    glPopMatrix() # del desplazamiento de las patas en altura/2
 
     # Dibujar la tabla de la mesa
     glPushMatrix()
