@@ -8,7 +8,9 @@ from OpenGL.GLU import *
 
 def escenario():
     
-    piso(2)
+    glScalef(0.08, 0.08, 0.08) ## hace 10 veces más pequeño en ejes x, y, z
+
+    piso(40)
     
     #glMatrixMode(GL_MODELVIEW)
     #glPushMatrix()
@@ -25,7 +27,7 @@ def escenario():
 
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()    
-    glScalef(0.08, 0.08, 0.08) ## hace 10 veces más pequeño en ejes x, y, z
+    
     #dibujarComposicionMesaSillas()
     dibujarComposicionMesaGrandeConSillas()
     glPopMatrix()
@@ -216,16 +218,8 @@ def dibujarSilla():
 
 def piso(edge=5):
 
-    y = -0.5
-    half_edge = edge/2
-    # PISO
-    glColor3f(0.5, 0.5, 0.5) # Gris
-    glBegin(GL_QUADS)
-    glVertex3f(-half_edge, y, -half_edge)
-    glVertex3f(-half_edge, y, half_edge)
-    glVertex3f(half_edge, y, half_edge)
-    glVertex3f(half_edge, y, -half_edge)
-    glEnd()
+    color_azul_claro = [0.5, 0.5, 1.0]
+    apilarCubosColorRand(color_azul_claro, 0.3, edge, 1, edge)
 
 # variables global para que los colores sean los mismos en cada repintado
 randomseed = time.time()
