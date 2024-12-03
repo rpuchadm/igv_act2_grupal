@@ -242,7 +242,7 @@ def estanterias(x=40, y=40, z=10, alturas=4) :
     color_gris_claro = [0.8, 0.8, 0.8]
     color_marron_claro = [0.65, 0.32, 0.17]
 
-    for i in range(1,alturas):
+    for i in range(1,alturas+1):
         glPushMatrix()
         glTranslatef(0, y//alturas*i, 0)
         apilarCubosColorRand(color_gris_claro, 0.2, x, 1, z)
