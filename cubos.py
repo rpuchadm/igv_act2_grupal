@@ -243,10 +243,9 @@ def apilarCubosColorRand(color_base=[0.65, 0.32, 0.17], variabilidad=0.1, x=0, y
     for i in range(y):
         for j in range(x if x > 0 else 1):  # Si x > 0 genera filas en el plano
             for k in range(z if z > 0 else 1):  # Si z > 0 genera profundidad
-                # Si z=10, generamos un cubo hueco dejando vacío el interior
-                if z == 10 and x == 10 and y == 10:
-                    if not (i == 0 or i == y - 1 or j == 0 or j == x - 1 or k == 0 or k == z - 1):
-                        continue  # Ignorar los cubos internos
+                # generamos un cubo hueco dejando vacío el interior                
+                if not (i == 0 or i == y - 1 or j == 0 or j == x - 1 or k == 0 or k == z - 1):
+                    continue  # Ignorar los cubos internos
 
                 # Generar color aleatorio dentro del rango ±variabilidad% del color base
                 color_variado = [
