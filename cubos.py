@@ -32,6 +32,13 @@ def escenario():
     dibujarComposicionMesaGrandeConSillas()
     glPopMatrix()
 
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glTranslatef(-40, 0, 0)
+    glRotatef(-90, 0, 1, 0)
+    comoda()
+    glPopMatrix()
+
 
 def dibujarComposicionMesaGrandeConSillas():
     glMatrixMode(GL_MODELVIEW)
@@ -223,6 +230,25 @@ def piso(edge=5):
 
 # variables global para que los colores sean los mismos en cada repintado
 randomseed = time.time()
+
+def comoda(x=40,y=18,z=10) :
+
+    color_marron_claro = [0.65, 0.32, 0.17]
+    color_gris_claro = [0.8, 0.8, 0.8]
+
+    glPushMatrix()
+    glTranslatef(0, y/2, 0)
+    apilarCubosColorRand(color_marron_claro, 0.2, x, y, z)
+    glPopMatrix()
+
+    # tapa gris
+    glPushMatrix()
+    glTranslatef(0, y, 0)
+    apilarCubosColorRand(color_gris_claro, 0.2, x, 1, z)
+    glPopMatrix()
+
+
+
 
 def apilarCubosColorRand(color_base=[0.65, 0.32, 0.17], variabilidad=0.1, x=0, y=10, z=0):
     """
