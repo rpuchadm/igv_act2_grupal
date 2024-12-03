@@ -1,13 +1,14 @@
 # Importación de módulos
 
 import random
+import time
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
 def escenario():
     
-    piso()
+    piso(2)
     
     #glMatrixMode(GL_MODELVIEW)
     #glPushMatrix()
@@ -24,7 +25,7 @@ def escenario():
 
     glMatrixMode(GL_MODELVIEW)
     glPushMatrix()    
-    glScalef(0.1, 0.1, 0.1) ## hace 10 veces más pequeño en ejes x, y, z
+    glScalef(0.08, 0.08, 0.08) ## hace 10 veces más pequeño en ejes x, y, z
     #dibujarComposicionMesaSillas()
     dibujarComposicionMesaGrandeConSillas()
     glPopMatrix()
@@ -213,10 +214,10 @@ def dibujarSilla():
     glPopMatrix()
 
 
-def piso():
+def piso(edge=5):
 
     y = -0.5
-    half_edge = 2.5
+    half_edge = edge/2
     # PISO
     glColor3f(0.5, 0.5, 0.5) # Gris
     glBegin(GL_QUADS)
@@ -225,6 +226,9 @@ def piso():
     glVertex3f(half_edge, y, half_edge)
     glVertex3f(half_edge, y, -half_edge)
     glEnd()
+
+# variables global para que los colores sean los mismos en cada repintado
+randomseed = time.time()
 
 def apilarCubosColorRand(color_base=[0.65, 0.32, 0.17], variabilidad=0.1, x=0, y=10, z=0):
     """
@@ -239,6 +243,9 @@ def apilarCubosColorRand(color_base=[0.65, 0.32, 0.17], variabilidad=0.1, x=0, y
     offset_x = -(x - 1) * 0.5 if x > 0 else 0  # Centrar en X
     offset_y = -(y - 1) * 0.5 if y > 0 else 0  # Centrar en Y
     offset_z = -(z - 1) * 0.5 if z > 0 else 0  # Centrar en Z
+
+    # para que los colores sean los mismos en cada repintado
+    random.seed(randomseed)
 
     for i in range(y):
         for j in range(x if x > 0 else 1):  # Si x > 0 genera filas en el plano
