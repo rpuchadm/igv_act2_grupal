@@ -39,6 +39,12 @@ def escenario():
     comoda()
     glPopMatrix()
 
+    glMatrixMode(GL_MODELVIEW)
+    glPushMatrix()
+    glTranslatef(0, 0, -30)
+    estanterias()
+    glPopMatrix()
+
 
 def dibujarComposicionMesaGrandeConSillas():
     glMatrixMode(GL_MODELVIEW)
@@ -230,6 +236,31 @@ def piso(edge=5):
 
 # variables global para que los colores sean los mismos en cada repintado
 randomseed = time.time()
+
+def estanterias(x=40, y=40, z=10, alturas=4) :
+
+    color_gris_claro = [0.8, 0.8, 0.8]
+    color_marron_claro = [0.65, 0.32, 0.17]
+
+    for i in range(1,alturas):
+        glPushMatrix()
+        glTranslatef(0, y//alturas*i, 0)
+        apilarCubosColorRand(color_gris_claro, 0.2, x, 1, z)
+        glPopMatrix()
+
+    #estructura lateral para sostener las estanterias
+    desplazamiento_x = x//2
+    desplazamiento_y = y//2
+    glPushMatrix()    
+    glTranslatef(desplazamiento_x, desplazamiento_y, 0)
+    apilarCubosColorRand(color_marron_claro, 0.2, 1, y, z)
+    glPopMatrix()
+
+    glPushMatrix()
+    glTranslatef(-desplazamiento_x, desplazamiento_y, 0)
+    apilarCubosColorRand(color_marron_claro, 0.2, 1, y, z)
+    glPopMatrix()
+
 
 def comoda(x=40,y=18,z=10) :
 
